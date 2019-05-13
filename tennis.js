@@ -37,24 +37,30 @@
 
     const advantages = 'Ad';
     
-    let winner = 0;
+    let winner = false;
     let { red, blue } = room.getScores();
     
     if ((red >= 3 && blue >= 3)) {
-      if (red > blue) {
+      if (red > blue && red - blue == 1) {
         red = advantages;
+        blue = mapping[3];
       }
-      else if (red < blue) {
+      else if (red < blue && blue - red == 1) {
         blue = advantages;
+        red = mapping[3];
       }
       else if (red == blue) {
         red = blue = mapping[3];
       }
-      else if (red - blue == 2 ) {
-        winner = 1;
-      }
-      else if (blue - red == 2) {
-        winner = 2;
+      else {
+        const { red, blue } = room.getScores();
+
+        if (red - blue == 2) {
+          winner = 1;
+        }
+        else if (blue - red == 2) {
+          winner = 2;
+        }
       }
     }
     else if (red > 3) {
@@ -63,9 +69,10 @@
     else if (blue > 3) {
       winner = 2;
     }
-
-    red = mapping[red] || 0;
-    blue = mapping[blue] || 0;
+    else {
+      red = mapping[red] || 0;
+      blue = mapping[blue] || 0;
+    }
 
     const players = room.getPlayerList();
 
@@ -77,7 +84,7 @@
       return player.team == 2;
     });
 
-    if (typeof playerBlue !== 'undefined' && playerRed !== 'undefined') {
+    if (typeof playerBlue !== 'undefined' && playerRed !== 'undefined' && !winner) {
       room.sendChat(`${playerRed[0].name} [${red}] - ${playerBlue[0].name} [${blue}]`);
     }
 
