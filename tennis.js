@@ -1,9 +1,11 @@
+(function() {
+
+  let _chat = true;
 
   const room = HBInit({ 
-    roomName: 'ჩოგბურთი!',
+    roomName: 'ჩოგბურთი (BETA)',
     maxPlayers: 5,
     public: true,
-    password: 'development',
     playerName: 'Umpire'
   });
 
@@ -20,12 +22,31 @@
     room.setPlayerAdmin(players[0].id, true);
   }
 
-  room.onPlayerJoin = function(player) {
+  room.onPlayerJoin = (player) => {
     updateAdmins();
   }
 
-  room.onPlayerLeave = function(player) {
+  room.onPlayerLeave = (player) => {
     updateAdmins();
+  }
+
+  room.onGameStart = (byPlayer, player) => {
+    _chat = false;
+  }
+
+  room.onGameStop = (byPlayer, player) => {
+    _chat = true;
+  }
+
+  room.onPlayerChat = (player, message) => {
+    if (message == '!enable' && player.admin) {
+      _chat = true;
+    }
+    else if (message == '!disable' && player.admin) {
+      _chat = false;
+    }
+
+    return _chat;
   }
 
   room.onTeamGoal = (team) => {
@@ -94,5 +115,11 @@
       });
 
       room.sendChat(`გამარჯვებულია - ${player[0].name}`);
+      
+      setTimeout(() => {
+        room.stopGame();
+      }, 2000);
     }
   }
+
+})()
