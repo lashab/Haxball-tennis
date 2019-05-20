@@ -143,7 +143,7 @@
       sets[playerWinner[0].id]['win'] += 1;
       set += 1;
 
-      room.sendChat(`${map[set]} სეტი მოიგო - ${playerWinner[0].name}`);
+      room.sendChat(`${map[set]} სეტის გამარჯვებულია - ${playerWinner[0].name}`);
       
       if (sets[playerWinner[0].id].win == 2) {
         room.sendChat(`გამარჯვებულია - ${playerWinner[0].name}`);
